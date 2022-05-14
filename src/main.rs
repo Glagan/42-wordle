@@ -74,7 +74,12 @@ fn main() {
             state.print();
             match result {
                 InputResult::Invalid => {
-                    println!("{}", "The word is not in the dictionary".yellow());
+                    println!(
+                        "{} {} {}",
+                        "The word".yellow(),
+                        format!("{}", user_input).blue(),
+                        "is not in the dictionary".yellow()
+                    );
                 }
                 InputResult::GameOver => {
                     println!(
