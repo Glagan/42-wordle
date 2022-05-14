@@ -21,11 +21,31 @@ impl Tracker {
     }
 
     pub fn print_summary(&self) {
-        println!(
-            "You played {} games and won {} of them ({:.2}%) !",
+        let win_rate = (self.wins as f64 * 100.) / self.total_games as f64;
+        print!(
+            "You played {} games and won {} of them ({:.2}%) ! ",
             format!("{}", self.total_games).blue(),
             format!("{}", self.wins).green(),
-            (self.wins as f64 * 100.) / self.total_games as f64
+            win_rate
         );
+        if win_rate < 1. {
+            print!("{}", "Ouch.".red());
+        } else if win_rate < 50. {
+            print!("{}", "Good job !".blue());
+        } else if win_rate < 100. {
+            print!("{}", "You're great !".green());
+        } else {
+            print!(
+                "{}{}{}{}{}{}{}",
+                "P".on_blue(),
+                "E".on_green(),
+                "R".on_yellow(),
+                "F".on_purple(),
+                "E".on_cyan(),
+                "C".on_green(),
+                "T".on_blue()
+            );
+        }
+        println!();
     }
 }
