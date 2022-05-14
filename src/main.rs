@@ -7,10 +7,12 @@ use std::{
     io::{self, Write},
     process,
 };
+use tracker::Tracker;
 
 mod dictionary;
 mod guess;
 mod state;
+mod tracker;
 
 fn input_line(prefix: &str) -> Result<String, String> {
     print!("{}", prefix);
@@ -37,6 +39,7 @@ fn main() {
         process::exit(1);
     });
     // Setup state
+    let mut tracker = Tracker::new();
     let mut state = State::new(dictionary);
 
     // Main loop
@@ -87,6 +90,7 @@ fn main() {
                         "You ran out of guesses !".purple(),
                         state.word.green()
                     );
+                    tracker.add_game(false);
                     do_input = false;
                 }
                 InputResult::Correct => {
@@ -94,6 +98,7 @@ fn main() {
                         "You guessed correctly ! The word was {} !",
                         state.word.green()
                     );
+                    tracker.add_game(true);
                     state.print_emoji();
                     do_input = false;
                 }
@@ -120,4 +125,7 @@ fn main() {
             do_loop = false;
         }
     }
+
+    // Show the session summary
+    tracker.print_summary();
 }
