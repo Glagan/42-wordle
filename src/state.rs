@@ -66,4 +66,12 @@ impl State {
             }
         }
     }
+
+    pub fn print_emoji(&self) {
+        println!("{} {}/6", self.word, self.guesses.len());
+        for guess in self.guesses.iter() {
+            guess.print_emoji();
+            println!();
+        }
+    }
 }

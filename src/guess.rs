@@ -49,4 +49,16 @@ impl Guess {
             }
         }
     }
+
+    pub fn print_emoji(&self) {
+        for (index, _) in self.word.chars().enumerate() {
+            if self.correct_letters.contains(&index) {
+                print!("🟩");
+            } else if self.missplaced_letters.contains(&index) {
+                print!("🟨");
+            } else {
+                print!("⬛");
+            }
+        }
+    }
 }

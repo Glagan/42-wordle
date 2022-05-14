@@ -94,6 +94,7 @@ fn main() {
                         "You guessed correctly ! The word was {} !",
                         state.word.green()
                     );
+                    state.print_emoji();
                     do_input = false;
                 }
                 InputResult::Incorrect => {
