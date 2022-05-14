@@ -1,4 +1,7 @@
-use crate::dictionary::Dictionary;
+use crate::{
+    dictionary::Dictionary,
+    state::{InputResult, State},
+};
 use colored::Colorize;
 use std::{
     io::{self, Write},
@@ -6,6 +9,8 @@ use std::{
 };
 
 mod dictionary;
+mod guess;
+mod state;
 
 fn input_line(prefix: &str) -> Result<String, String> {
     print!("{}", prefix);
@@ -31,22 +36,25 @@ fn main() {
         eprintln!("{}", error.red());
         process::exit(1);
     });
+    // Setup state
+    let mut state = State::new(dictionary);
 
     // Main loop
     let mut do_loop = true;
     while do_loop {
-        // Random word
-        let word = dictionary.random_word().unwrap_or_else(|| {
-            eprintln!("{}", "No word found in Dictionary !".red());
+        // Generate a new word and clean previous guesses
+        state.restart().unwrap_or_else(|error| {
+            eprintln!("Failed to start a game: {}", format!("{}", error).red());
             process::exit(1);
         });
 
         // Debug
-        println!("The word is {}", word.blue());
+        println!(">> The word is {}", state.word.blue());
 
         // Input loop
         let mut do_input = true;
         while do_input {
+            // Ask for input
             let user_input = input_line("input: ").unwrap_or_else(|error| {
                 eprintln!(
                     "{}",
@@ -54,7 +62,6 @@ fn main() {
                 );
                 process::exit(1);
             });
-            println!("entered: {}", user_input);
 
             // Check if it's valid
             if user_input.len() != 5 {
@@ -62,10 +69,34 @@ fn main() {
                 continue;
             }
 
-            // Check if it's the word
-            if *word == user_input {
-                println!("{}", "You found the word !".green());
-                do_input = false;
+            // Guess from state
+            let result = state.guess_input(user_input);
+            state.print();
+            match result {
+                InputResult::Invalid => {
+                    println!("{}", "The word is not in the dictionary".yellow());
+                }
+                InputResult::GameOver => {
+                    println!(
+                        "{} The word was {} !",
+                        "You ran out of guesses !".purple(),
+                        state.word.green()
+                    );
+                    do_input = false;
+                }
+                InputResult::Correct => {
+                    println!(
+                        "You guessed correctly ! The word was {} !",
+                        state.word.green()
+                    );
+                    do_input = false;
+                }
+                InputResult::Incorrect => {
+                    println!(
+                        "That's not the word, you have {} guesses left.",
+                        format!("{}", state.guesses_left()).blue()
+                    );
+                }
             }
         }
 
