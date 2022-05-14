@@ -45,7 +45,7 @@ impl Guess {
             } else if self.missplaced_letters.contains(&index) {
                 print!("{} ", format!("{}", letter).bright_yellow());
             } else {
-                print!("{} ", letter);
+                print!("{} ", format!("{}", letter).dimmed());
             }
         }
     }
