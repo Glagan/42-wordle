@@ -20,7 +20,7 @@ fn input_line(prefix: &str) -> Result<String, String> {
     if let Err(error) = result {
         Err(error.to_string())
     } else {
-        Ok(user_input.trim().to_string())
+        Ok(user_input.trim().to_string().to_uppercase())
     }
 }
 
@@ -70,7 +70,7 @@ fn main() {
             }
 
             // Guess from state
-            let result = state.guess_input(user_input);
+            let result = state.guess_input(user_input.to_uppercase());
             state.print();
             match result {
                 InputResult::Invalid => {
