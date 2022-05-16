@@ -52,7 +52,8 @@ fn main() {
         });
 
         // Debug
-        println!(">> The word is {}", state.word.blue());
+        println!("Try to guess the word !");
+        // println  !(">> The word is {}", state.word.blue());
 
         // Input loop
         let mut do_input = true;
