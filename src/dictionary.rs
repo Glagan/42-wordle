@@ -16,7 +16,7 @@ impl Dictionary {
         let mut words: Vec<String> = vec![];
         for line in content.unwrap().split("\n") {
             let clean_line = line.trim().to_uppercase();
-            if clean_line.len() == 5 {
+            if clean_line.len() == 5 && clean_line.chars().all(|c| c.is_ascii_alphabetic()) {
                 words.push(clean_line.to_string());
             }
         }

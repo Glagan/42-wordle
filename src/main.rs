@@ -71,6 +71,13 @@ fn main() {
                 eprintln!("{}", "Entered words must be of length 5".yellow());
                 continue;
             }
+            if !user_input.chars().all(|c| c.is_ascii_alphabetic()) {
+                eprintln!(
+                    "{}",
+                    "The word must only contains letters from the alphabet".yellow()
+                );
+                continue;
+            }
 
             // Guess from state
             let result = state.guess_input(user_input.to_uppercase());
